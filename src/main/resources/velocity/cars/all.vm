@@ -1,0 +1,57 @@
+#parse("/velocity/layout.vm")
+###@mainLayout()
+<head>
+    <title>$msg.get("COMMON_TITLE")</title>
+    <link rel="stylesheet" href="/main.css">
+    <link rel="icon" href="/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<h1>$msg.get("CARS_HEADING_ALL")</h1>
+<table border="1" cellspacing="0" cellpadding="0">
+    #foreach($car in $cars)
+        <div class="col">
+            <tr>
+                <td class="col">
+                    <a class="car" href="/cars/$car.id">
+                        $car.getModel()
+                    </a>
+                </td>
+                <td class="col">
+                    $car.getYear()
+                </td>
+
+                <td class="col">
+                    $car.getEngine()
+                </td>
+                <td class="col">
+                    $car.getGearbox()
+                </td>
+                <td class="col">
+                    $car.getColour()
+                </td>
+                <td class="col">
+                    $car.getOwners()
+                </td>
+                <td class="col">
+                    $car.getRego()
+                </td>
+                <td class="col">
+                    $car.getLocation()
+                </td>
+                <td class="col">
+                    $car.getVin()
+                </td>
+                <td class="col">
+                    $car.getOther()
+                </td>
+                <td class="col">
+                    <div>
+                        <img src="$car.getMake()" alt="no photo">
+                    </div>
+                </td>
+            </tr>
+        </div>
+    #end
+</table>
+</body>

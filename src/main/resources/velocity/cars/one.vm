@@ -1,0 +1,49 @@
+#parse("/velocity/layout.vm")
+###@mainLayout()
+<head>
+    <title>$msg.get("COMMON_TITLE")</title>
+    <link rel="stylesheet" href="/main.css">
+    <link rel="icon" href="/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<table border="1" cellspacing="0" cellpadding="0">
+    <tr>
+        <div class="row">
+            <td class="col">
+                $car.getVariant()
+            </td>
+            <td class="col">
+                $car.getYear()
+            </td>
+
+            <td class="col">
+                $car.getEngine()
+            </td>
+            <td class=""col">
+            $car.getColour()
+            </td>
+            <td class="col">
+                $car.getOwners()
+            </td>
+            <td class="col">
+                $car.getOther()
+            </td>
+            <td class="col">
+                $car.getLocation()
+            </td>
+            <td class="col">
+                $car.getVin()
+            </td>
+            <td class="col">
+                <div class="bookCover">
+                    <img src="$car.make" alt="$car.model">
+                </div>
+                $msg.get("CARS_CAPTION", $car.variant, $car.year)
+            </td>
+        </div>
+    </tr>
+    </div>
+</table>
+</body>
+
