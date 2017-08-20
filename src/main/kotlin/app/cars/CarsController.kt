@@ -1,12 +1,14 @@
-package main.kotlin.app.cars
+package app.cars
 
+import app.cars.CarParser
 import app.resources.CarsResource
 import app.util.Path.Template.CARS_ALL
 import app.util.Path.Template.CAR
+import com.squareup.moshi.KotlinJsonAdapterFactory
+import com.squareup.moshi.Moshi
 import com.sun.javafx.tools.packager.Log
 import main.kotlin.app.util.ViewUtil
 import spark.Request
-import spark.Response
 
 class CarsController {
 
@@ -24,4 +26,11 @@ class CarsController {
                 hashMapOf(Pair("car",
                         CarsResource.getById(request.params("id")))), CAR)
     }
+
+    fun editCar(request: Request) {
+        CarsResource.edit(request.params("id"),
+                CarFromCarNode(CarParser.parseOne(request.body()))
+        )
+    }
+
 }

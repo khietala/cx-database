@@ -22,4 +22,8 @@ object CarsResource {
     fun getById(id: String): Car {
         return carsDao.getById(id)
     }
+
+    fun edit(id: String, car: Car): Car {
+        return car
+    }
 }

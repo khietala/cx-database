@@ -1,9 +1,9 @@
 package main
 
+import app.cars.CarsController
 import app.resources.CarsResource
 import app.util.Filters
 import app.util.Path
-import main.kotlin.app.cars.CarsController
 //import spark.kotlin.before
 //import spark.kotlin.get
 //import spark.kotlin.port
