@@ -1,18 +1,22 @@
 package app.resources
-import app.cars.Car
-import app.cars.CarDao
+import app.cars.*
+import app.util.Path
 import spark.Spark.*
 
-val carsDao = CarDao()
 object CarsResource {
-    fun init(): Unit {
-        path("/api/cars") {
-            get("") { _, _ ->
-                getAll()
-            }
-
-            get("/:id") { request, _ ->  getById(request.params("id")) }
+    lateinit var carsDao: CarDao
+    fun init(carsController: CarsController, carsDao: CarDao): Unit {
+        this.carsDao = carsDao
+        path(Path.Web.API_CARS) {
+            get("") { _, _ -> getAll() }
+            get("/:id") { request, _ -> getById(request.params("id")) }
+            put("/:id") { req, _ -> edit(req.params("id"), CarFromCarNode(CarParser.parseOne(req.body()))) }
+            post("") { req, _ -> create(CarFromCarNode(CarParser.parseOne(req.body()))) }
         }
+
+        path(Path.Web.INDEX) { get("") { req, res ->  "Hello World" } }
+        path(Path.Web.CARS) { get("") { req, res -> carsController.getCars(req)} }
+        path(Path.Web.CAR) { get("") { req, res -> carsController.getCar(req)} }
     }
 
     fun getAll():HashMap<String, Car>  {
@@ -23,7 +27,11 @@ object CarsResource {
         return carsDao.getById(id)
     }
 
-    fun edit(id: String, car: Car): Car {
-        return car
+    fun edit(id: String, car: Car) {
+        carsDao.edit(id, car)
+    }
+
+    fun create(car: Car): String {
+        return carsDao.create(car)
     }
 }

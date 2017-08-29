@@ -22,13 +22,15 @@ class CarsResourceTest {
     val baseURI = "http://localhost:4567/"
     var carsResource: CarsResource = CarsResource
     var records = Cars(cars = HashMap())
+    val carDao = CarDao("resourceTest")
 
     @Before
     fun setup() {
-        carsResource.init()
+        carsResource.init(CarsController(), carDao)
+
         awaitInitialization()
 
-        val carDao = CarDao("resourceTest")
+
         records = Cars(cars = CarsResourceTest().createRecords())
         carDao.createDb(records)
 
@@ -36,7 +38,7 @@ class CarsResourceTest {
 
     @After
     fun teardown() {
-        carsDao.clear()
+        carDao.clear()
     }
 
     @Test
@@ -65,9 +67,18 @@ class CarsResourceTest {
 
     @Test
     fun updateRecord(): Unit {
+        var testUrl = "${baseURI}api/cars/2"
         val records = createRecords()
         CarDao("unitTest").createDb(records )
-        var toEdit = records
+        given()
+                .contentType("application/json")
+                .body(records.filter{it.key == "2"}.getOrDefault("0", defaultCar()).copy(model="edited"))
+
+                .put(testUrl)
+
+                .then()
+                .statusCode(200)
+
     }
 
     fun createRecords(): HashMap<String, Car> {

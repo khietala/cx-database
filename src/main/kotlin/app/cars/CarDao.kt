@@ -16,11 +16,13 @@ class CarDao(val dbName: String = "cars.json") {
         return carsCache.cars.getOrDefault(id, defaultCar())
     }
 
-    fun create(car: Car): Unit {
+    fun create(car: Car): String {
         var cars = getAll().toMutableMap()
-        cars.put(UUID.randomUUID().toString(), car)
+        var newId = UUID.randomUUID().toString()
+        cars.put(newId, car)
         toFile(toJson(Cars(cars = cars as HashMap<String, Car>)), dbName)
         carsCache = fromFile(dbName)
+        return newId
     }
 
     fun edit(id: String, car: Car) {
@@ -78,7 +80,7 @@ fun fromJson(jsonString: String): Cars {
         car.id = if (car.id != "") car.id else UUID.randomUUID().toString()
         car.id to CarFromCarNode(car)
     }.toMap()
-    return Cars(cars= (if (cars != null)  cars as HashMap<String, Car> else hashMapOf()))
+    return Cars(cars= (if (cars != null && cars.size > 0)  cars as HashMap<String, Car> else hashMapOf()))
 }
 
 fun CarFromCarNode(car: CarParser.CarNode?): Car {

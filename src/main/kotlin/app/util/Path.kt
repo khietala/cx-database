@@ -11,6 +11,7 @@ class Path {
         val LOGOUT = "/logout/"
         val CARS = "/cars/"
         val CAR = "/cars/:id/"
+        val API_CARS = "/api/cars"
     }
 
     object Template {

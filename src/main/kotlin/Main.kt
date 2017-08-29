@@ -1,18 +1,21 @@
 package main
 
+import app.cars.CarDao
 import app.cars.CarsController
 import app.resources.CarsResource
 import app.util.Filters
-import app.util.Path
-//import spark.kotlin.before
-//import spark.kotlin.get
-//import spark.kotlin.port
 import spark.Spark.*
 import org.apache.velocity.app.VelocityEngine
 import org.apache.velocity.runtime.RuntimeConstants
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 
-//import spark.debug.DebugScreen.*
+fun <R : Any> R.logger(): Lazy<Logger> {
+    return lazy { LoggerFactory.getLogger(this::class.java.name) }
+}
+
+fun <T> loggerFor(clazz: Class<T>) = LoggerFactory.getLogger(clazz)
 
 object SparkKotlin {
     val LOGGER_NAME = "kotlin example"
@@ -36,13 +39,7 @@ object SparkKotlin {
         before("*", Filters.addTrailingSlashes)
         before("*") {request, response ->  Filters.handleLocaleChange(request, response)}
 
-
-        get(Path.Web.INDEX) {request, response ->  "Hello World" }
-
-        get(Path.Web.CARS) { req, res -> carsController.getCars(req)}
-        get(Path.Web.CAR) { req, res -> carsController.getCar(req)}
-
-        CarsResource.init()
+        CarsResource.init(carsController, CarDao())
 
     }
 }
