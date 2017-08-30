@@ -77,7 +77,7 @@ fun toJson(cars: Cars): String {
 fun fromJson(jsonString: String): Cars {
     val cars = CarParser.parse(jsonString).map {
         val car = it
-        car.id = if (car.id != "") car.id else UUID.randomUUID().toString()
+        car.id = if (car.id != null && car.id != "") car.id else UUID.randomUUID().toString()
         car.id to CarFromCarNode(car)
     }.toMap()
     return Cars(cars= (if (cars != null && cars.size > 0)  cars as HashMap<String, Car> else hashMapOf()))

@@ -43,7 +43,7 @@ public class CarParser {
         @JsonProperty("colour")
         String colour;
     }
-    static Collection<CarNode> parse(final String jsonString) throws IOException {
+    public static Collection<CarNode> parse(final String jsonString) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         return Optional.ofNullable(jsonString)
@@ -65,11 +65,16 @@ public class CarParser {
         return carNode;
     }
 
-    static String marshall(Collection<CarNode> carNodes) throws JsonProcessingException {
+    public static String marshall(Collection<CarNode> carNodes) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         return objectMapper.writeValueAsString(carNodes);
 
     }
 
+    public static String marshall(CarNode carNode) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        return objectMapper.writeValueAsString(carNode);
+    }
 }
