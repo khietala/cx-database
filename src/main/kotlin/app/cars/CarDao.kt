@@ -17,18 +17,21 @@ class CarDao(val dbName: String = "cars.json") {
     }
 
     fun create(car: Car): String {
-        var cars = getAll().toMutableMap()
         var newId = UUID.randomUUID().toString()
-        cars.put(newId, car)
-        toFile(toJson(Cars(cars = cars as HashMap<String, Car>)), dbName)
+        toFile(
+                toJson(
+                        Cars(cars = getAll().apply { put(newId, car) })), dbName)
         carsCache = fromFile(dbName)
         return newId
     }
 
     fun edit(id: String, car: Car) {
-        var cars = getAll().toMutableMap().filter { it.key != id }.toMutableMap()
-        cars.put(car.id, car)
-        toFile(toJson(Cars(cars= cars as HashMap<String, Car>)), dbName)
+        toFile(
+                toJson(
+                        Cars(cars = getAll().entries
+                                .map{ if (it.key == car.id) it.key to car else it.key to it.value }
+                                .toMap() as HashMap<String, Car>)), dbName)
+
         carsCache = fromFile(dbName)
     }
 
