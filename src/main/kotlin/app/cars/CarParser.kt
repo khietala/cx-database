@@ -75,7 +75,7 @@ object CarParser {
         return mapper().writeValueAsString(CarNodeFromCar(car))
     }
 
-    fun mapper(): ObjectMapper {
+    private fun mapper(): ObjectMapper {
         val objectMapper = ObjectMapper()
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
         return objectMapper
