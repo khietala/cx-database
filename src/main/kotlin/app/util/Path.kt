@@ -9,8 +9,8 @@ class Path {
         val INDEX = "/index/"
         val LOGIN = "/login/"
         val LOGOUT = "/logout/"
-        val CARS = "/cars/"
-        val CAR = "/cars/:id/"
+        val CARS = "/cars"
+        val CAR = "/cars/:id"
         val API_CARS = "/api/cars"
     }
 

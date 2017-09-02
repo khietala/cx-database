@@ -8,6 +8,7 @@ import kotlin.collections.HashMap
 import spark.Spark.awaitInitialization
 import com.jayway.restassured.RestAssured.given
 import com.jayway.restassured.http.ContentType
+import org.hamcrest.CoreMatchers
 import org.junit.After
 import org.skyscreamer.jsonassert.JSONAssert
 
@@ -86,6 +87,44 @@ class CarsResourceTest {
                 .then()
                 .statusCode(200)
 
+    }
+
+    @Test
+    fun givenTenCarsThenTenCarsRendered(): Unit {
+        val testUrl = "${baseURI}cars"
+        createRecords()
+        given()
+                .accept(ContentType.HTML)
+                .get(testUrl)
+
+                .then()
+                .statusCode(200)
+                .body(CoreMatchers.containsString("<tr>"));
+    }
+
+    @Test
+    fun giveOneSpecificCarAndGetOneThenSpecificRendered() {
+        val testUrl = "${baseURI}cars/"
+        val car1 = Car(id="1", year = "1979")
+        val car2 = Car(id="2", year = "1980")
+        carDao.createDb(hashMapOf("1" to car1, "2" to car2))
+
+        given()
+                .accept(ContentType.HTML)
+                .get("${testUrl}2")
+
+                .then()
+                .statusCode(200)
+                .body(CoreMatchers.containsString("1980"))
+
+
+        given()
+                .accept(ContentType.HTML)
+                .get("${testUrl}1")
+
+                .then()
+                .statusCode(200)
+                .body(CoreMatchers.containsString("1979"));
     }
 
     fun createRecords(): HashMap<String, Car> {
