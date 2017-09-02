@@ -14,9 +14,9 @@ object CarsResource {
             post("") { req, _ -> create(CarFromCarNode(CarParser.parseOne(req.body()))) }
         }
 
-        path(Path.Web.INDEX) { get("") { req, res ->  "Hello World" } }
-        path(Path.Web.CARS) { get("") { req, res -> carsController.getCars(req)} }
-        path(Path.Web.CAR) { get("") { req, res -> carsController.getCar(req)} }
+        path(Path.Web.INDEX) { get("") { _, _ ->  "Hello World" } }
+        path(Path.Web.CARS) { get("") { req, _ -> carsController.getCars(req)} }
+        path(Path.Web.CAR) { get("") { req, _ -> carsController.getCar(req)} }
     }
 
     fun getAll():HashMap<String, Car>  {
