@@ -35,8 +35,6 @@ object SparkKotlin {
         port(4567)
         staticFiles.location("/public")
         staticFiles.expireTime(600L)
-//        enableDebugScreen()
-        //before("*", Filters.addTrailingSlashes)
         before("*") {request, response ->  Filters.handleLocaleChange(request, response)}
 
         after("/api/*") {_, response ->  response.type("application/json")}

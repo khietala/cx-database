@@ -74,49 +74,14 @@ fun toFile(jsonString: String, fileName: String = "cars.json"): Unit {
 }
 
 fun toJson(cars: Cars): String {
-    return CarParser.marshall(cars.cars.map{it.value}.map { CarNodeFromCar(it) })
+    return CarParser.marshall(cars)
 }
 
 fun fromJson(jsonString: String): Cars {
     val cars = CarParser.parse(jsonString).map {
-        val car = it
-        car.id = if (car.id != null && car.id != "") car.id else UUID.randomUUID().toString()
-        car.id to CarFromCarNode(car)
+        var car = it.copy(id = if (it.id != null && it.id != "") it.id else UUID.randomUUID().toString())
+        car.id to car
     }.toMap()
     return Cars(cars= (if (cars != null && cars.size > 0)  cars as HashMap<String, Car> else hashMapOf()))
 }
 
-fun CarFromCarNode(car: CarParser.CarNode?): Car {
-    return Car(
-            id = car?.id ?: UUID.randomUUID().toString(),
-            model = car?.model ?: "",
-            year = car?.year ?: "",
-            variant = car?.variant ?: "",
-            make = car?.make ?: "Citroen",
-            location = car?.location ?: "",
-            engine = car?.engine ?: "",
-            rego = car?.rego ?: "",
-            gearbox = car?.gearbox ?: "",
-            vin = car?.vin ?: "",
-            owners = car?.owners ?: "",
-            other = car?.other ?: "",
-            colour = car?.colour ?: ""
-    )
-}
-fun CarNodeFromCar(car: Car): CarParser.CarNode {
-    var c = CarParser.CarNode()
-    c.id = car.id
-    c.model = car.model
-    c.year = car.year
-    c.variant = car.variant
-    c.make = car.make
-    c.location = car.location
-    c.engine = car.engine
-    c.rego = car.rego
-    c.gearbox = car.gearbox
-    c.vin = car.vin
-    c.owners = car.owners
-    c.other = car.other
-    c.colour = car.colour
-    return c
-}

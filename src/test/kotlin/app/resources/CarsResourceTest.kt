@@ -46,13 +46,10 @@ class CarsResourceTest {
                 .then()
                 .statusCode(200)
                 .log().all()
-                //.body(sameJSONArrayAs(JSONArray(records.cars.values)))
-                //.body(containsString(records.cars.values.toString()))
-                //.body("$", hasItems(records.cars.entries.map { CarParser.marshall(CarNodeFromCar(it.value)) }))
                 .extract()
                 .response()
 
-        JSONAssert.assertEquals(response.asString(), CarParser.marshall(records.cars.entries.map { CarNodeFromCar(it.value) }), false)
+        JSONAssert.assertEquals(response.asString(), CarParser.marshall(records.cars.entries.map { it.value }), false)
     }
 
     @Test
@@ -64,13 +61,9 @@ class CarsResourceTest {
 
                 .then()
                 .statusCode(200).log().all()
-                //.body(carMatches(records.cars.getOrDefault("2", defaultCar())))
-                //.body(contains(records.cars.getOrDefault("2", defaultCar())))
                 .extract()
                 .response()
-        JSONAssert.assertEquals(response.asString(), CarParser.marshall(CarNodeFromCar(records.cars.getOrDefault("2", defaultCar()))), true)
-//        assertThat(CarParser.parseOne(response.asString()).id)
-//                .isEqualTo(records.cars.getOrDefault("2", defaultCar()).id)
+        JSONAssert.assertEquals(response.asString(), CarParser.marshall(records.cars.getOrDefault("2", defaultCar())), true)
     }
 
     @Test

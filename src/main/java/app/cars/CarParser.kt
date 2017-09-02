@@ -6,8 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 
 import java.io.IOException
-import java.util.Collections
-import java.util.Optional
+import java.util.*
 
 object CarParser {
     class CarNode {
@@ -37,35 +36,43 @@ object CarParser {
         internal var other: String? = null
         @JsonProperty("colour")
         internal var colour: String? = null
+
+        fun toCar(): Car {
+            return CarFromCarNode(this)
+        }
     }
 
     @Throws(IOException::class)
-    fun parse(jsonString: String): Collection<CarNode> {
+    fun parse(jsonString: String): Collection<Car> {
         return if (jsonString.isEmpty()) {
-            Collections.EMPTY_LIST as Collection<CarNode>
+            Collections.EMPTY_LIST as Collection<Car>
         } else {
             try {
-                mapper().readValue(jsonString, Array<CarNode>::class.java).asList()
+                mapper().readValue(jsonString, Array<CarNode>::class.java).map {  it.toCar() }
             } catch (e: IOException) {
-                Collections.EMPTY_LIST as Collection<CarNode>
+                Collections.EMPTY_LIST as Collection<Car>
             }
         }
     }
 
     @Throws(IOException::class)
-    fun parseOne(jsonString: String): CarParser.CarNode {
-        return mapper().readValue(jsonString, CarParser.CarNode::class.java)
+    fun parseOne(jsonString: String): Car {
+        return CarFromCarNode(mapper().readValue(jsonString, CarNode::class.java))
     }
 
     @Throws(JsonProcessingException::class)
-    fun marshall(carNodes: Collection<CarParser.CarNode>): String {
-        return mapper().writeValueAsString(carNodes)
-
+    fun marshall(cars: Cars): String {
+        return mapper().writeValueAsString(cars.cars.map{it.value}.map { CarNodeFromCar(it) })
     }
 
     @Throws(JsonProcessingException::class)
-    fun marshall(carNode: CarParser.CarNode): String {
-        return mapper().writeValueAsString(carNode)
+    fun marshall(cars: Collection<Car>): String {
+        return mapper().writeValueAsString(cars.map { CarNodeFromCar(it) })
+    }
+
+    @Throws(JsonProcessingException::class)
+    fun marshall(car: Car): String {
+        return mapper().writeValueAsString(CarNodeFromCar(car))
     }
 
     fun mapper(): ObjectMapper {
@@ -74,4 +81,39 @@ object CarParser {
         return objectMapper
 
     }
+}
+
+fun CarFromCarNode(car: CarParser.CarNode?): Car {
+    return Car(
+            id = car?.id ?: UUID.randomUUID().toString(),
+            model = car?.model ?: "",
+            year = car?.year ?: "",
+            variant = car?.variant ?: "",
+            make = car?.make ?: "Citroen",
+            location = car?.location ?: "",
+            engine = car?.engine ?: "",
+            rego = car?.rego ?: "",
+            gearbox = car?.gearbox ?: "",
+            vin = car?.vin ?: "",
+            owners = car?.owners ?: "",
+            other = car?.other ?: "",
+            colour = car?.colour ?: ""
+    )
+}
+fun CarNodeFromCar(car: Car): CarParser.CarNode {
+    var c = CarParser.CarNode()
+    c.id = car.id
+    c.model = car.model
+    c.year = car.year
+    c.variant = car.variant
+    c.make = car.make
+    c.location = car.location
+    c.engine = car.engine
+    c.rego = car.rego
+    c.gearbox = car.gearbox
+    c.vin = car.vin
+    c.owners = car.owners
+    c.other = car.other
+    c.colour = car.colour
+    return c
 }

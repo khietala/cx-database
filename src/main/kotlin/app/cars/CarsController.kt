@@ -27,9 +27,7 @@ class CarsController {
     }
 
     fun editCar(request: Request) {
-        CarsResource.edit(request.params("id"),
-                CarFromCarNode(CarParser.parseOne(request.body()))
-        )
+        CarsResource.edit(request.params("id"), CarParser.parseOne(request.body()))
     }
 
 }

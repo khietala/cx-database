@@ -8,10 +8,10 @@ object CarsResource {
     fun init(carsController: CarsController, carsDao: CarDao): Unit {
         this.carsDao = carsDao
         path(Path.Web.API_CARS) {
-            get("") { _, _ -> CarParser.marshall(getAll().entries.map {  CarNodeFromCar(it.value) }) }
-            get("/:id") { request, _ -> CarParser.marshall(CarNodeFromCar(getById(request.params("id")))) }
-            put("/:id") { req, _ -> edit(req.params("id"), CarFromCarNode(CarParser.parseOne(req.body()))) }
-            post("") { req, _ -> create(CarFromCarNode(CarParser.parseOne(req.body()))) }
+            get("") { _, _ -> CarParser.marshall(getAll().entries.map {  it.value }) }
+            get("/:id") { request, _ -> CarParser.marshall(getById(request.params("id"))) }
+            put("/:id") { req, _ -> edit(req.params("id"), CarParser.parseOne(req.body())) }
+            post("") { req, _ -> create(CarParser.parseOne(req.body())) }
         }
 
         path(Path.Web.INDEX) { get("") { _, _ ->  "Hello World" } }
