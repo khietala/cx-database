@@ -9,7 +9,7 @@ import java.io.IOException
 import java.util.*
 
 object CarParser {
-    class CarNode {
+    private class CarNode {
         @JsonProperty("id")
         var id: String? = null
         @JsonProperty("year")
@@ -81,39 +81,42 @@ object CarParser {
         return objectMapper
 
     }
+
+    private fun CarFromCarNode(car: CarParser.CarNode?): Car {
+        return Car(
+                id = car?.id ?: UUID.randomUUID().toString(),
+                model = car?.model ?: "",
+                year = car?.year ?: "",
+                variant = car?.variant ?: "",
+                make = car?.make ?: "Citroen",
+                location = car?.location ?: "",
+                engine = car?.engine ?: "",
+                rego = car?.rego ?: "",
+                gearbox = car?.gearbox ?: "",
+                vin = car?.vin ?: "",
+                owners = car?.owners ?: "",
+                other = car?.other ?: "",
+                colour = car?.colour ?: ""
+        )
+    }
+
+    private fun CarNodeFromCar(car: Car): CarParser.CarNode {
+        var c = CarParser.CarNode()
+        c.id = car.id
+        c.model = car.model
+        c.year = car.year
+        c.variant = car.variant
+        c.make = car.make
+        c.location = car.location
+        c.engine = car.engine
+        c.rego = car.rego
+        c.gearbox = car.gearbox
+        c.vin = car.vin
+        c.owners = car.owners
+        c.other = car.other
+        c.colour = car.colour
+        return c
+    }
+
 }
 
-fun CarFromCarNode(car: CarParser.CarNode?): Car {
-    return Car(
-            id = car?.id ?: UUID.randomUUID().toString(),
-            model = car?.model ?: "",
-            year = car?.year ?: "",
-            variant = car?.variant ?: "",
-            make = car?.make ?: "Citroen",
-            location = car?.location ?: "",
-            engine = car?.engine ?: "",
-            rego = car?.rego ?: "",
-            gearbox = car?.gearbox ?: "",
-            vin = car?.vin ?: "",
-            owners = car?.owners ?: "",
-            other = car?.other ?: "",
-            colour = car?.colour ?: ""
-    )
-}
-fun CarNodeFromCar(car: Car): CarParser.CarNode {
-    var c = CarParser.CarNode()
-    c.id = car.id
-    c.model = car.model
-    c.year = car.year
-    c.variant = car.variant
-    c.make = car.make
-    c.location = car.location
-    c.engine = car.engine
-    c.rego = car.rego
-    c.gearbox = car.gearbox
-    c.vin = car.vin
-    c.owners = car.owners
-    c.other = car.other
-    c.colour = car.colour
-    return c
-}
