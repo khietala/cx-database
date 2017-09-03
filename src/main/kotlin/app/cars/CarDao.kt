@@ -5,7 +5,7 @@ import java.util.*
 import kotlin.collections.HashMap
 
 
-class CarDao(val dbName: String = "cars.json") {
+class CarDao(val dbType: String = "json", val dbName: String = "cars.json") {
     private var carsCache: Cars = fromFile(dbName)
 
     fun getAll(): HashMap<String, Car> {
