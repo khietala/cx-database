@@ -6,7 +6,6 @@ class Path {
     // The @Getter methods are needed in order to access
     // the variables from Velocity Templates
     object Web {
-        val INDEX = "/index/"
         val LOGIN = "/login/"
         val LOGOUT = "/logout/"
         val CARS = "/cars"

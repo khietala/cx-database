@@ -1,6 +1,5 @@
 package app.cars
 
-import com.fasterxml.jackson.annotation.JsonProperty
 
 data class Car(val id: String,
                val year: String = "1980",

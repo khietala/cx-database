@@ -1,5 +1,8 @@
-package app.cars
+package app.cars.dao.json
 
+import app.cars.Car
+import app.cars.CarParser
+import app.cars.defaultCar
 import java.io.File
 import java.util.*
 import kotlin.collections.HashMap
@@ -29,7 +32,7 @@ class CarDao(val dbType: String = "json", val dbName: String = "cars.json") {
         toFile(
                 toJson(
                         Cars(cars = getAll().entries
-                                .map{ if (it.key == car.id) it.key to car else it.key to it.value }
+                                .map { if (it.key == car.id) it.key to car else it.key to it.value }
                                 .toMap() as HashMap<String, Car>)), dbName)
 
         carsCache = fromFile(dbName)
@@ -45,7 +48,7 @@ class CarDao(val dbType: String = "json", val dbName: String = "cars.json") {
     }
 
     fun createDb(cars: HashMap<String, Car>): Unit {
-        createDb(Cars(cars=cars))
+        createDb(Cars(cars = cars))
     }
 
     fun clear() {
@@ -82,6 +85,6 @@ fun fromJson(jsonString: String): Cars {
         var car = it.copy(id = if (it.id != null && it.id != "") it.id else UUID.randomUUID().toString())
         car.id to car
     }.toMap()
-    return Cars(cars= (if (cars != null && cars.size > 0)  cars as HashMap<String, Car> else hashMapOf()))
+    return Cars(cars = (if (cars != null && cars.size > 0) cars as HashMap<String, Car> else hashMapOf()))
 }
 

@@ -1,6 +1,8 @@
 package app.resources
 
 import app.cars.*
+import app.cars.dao.json.CarDao
+import app.cars.dao.json.Cars
 import org.junit.Before
 import org.junit.Test
 import java.util.*
@@ -25,10 +27,8 @@ class CarsResourceTest {
 
         awaitInitialization()
 
-
         records = Cars(cars = CarsResourceTest().createRecords())
         carDao.createDb(records)
-
     }
 
     @After
@@ -39,6 +39,7 @@ class CarsResourceTest {
     @Test
     fun givenGetAllThenAllReturned() {
         val testUrl = "${baseURI}api/cars"
+
         var response = given()
                 .accept(ContentType.ANY)
                 .get(testUrl)
@@ -55,6 +56,7 @@ class CarsResourceTest {
     @Test
     fun givenGetByIdThenOneReturned() {
         val testUrl = "${baseURI}api/cars/2"
+
         val response = given()
                 .accept(ContentType.JSON)
                 .get(testUrl)
@@ -63,6 +65,7 @@ class CarsResourceTest {
                 .statusCode(200).log().all()
                 .extract()
                 .response()
+
         JSONAssert.assertEquals(response.asString(), CarParser.marshall(records.cars.getOrDefault("2", defaultCar())), true)
     }
 
@@ -71,6 +74,7 @@ class CarsResourceTest {
         var testUrl = "${baseURI}api/cars/2"
         val records = createRecords()
         CarDao("unitTest").createDb(records)
+
         given()
                 .contentType("application/json")
                 .body(records.filter { it.key == "2" }.getOrDefault("0", defaultCar()).copy(model = "edited"))

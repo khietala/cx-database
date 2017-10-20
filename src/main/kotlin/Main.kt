@@ -1,6 +1,6 @@
 package main
 
-import app.cars.CarDao
+import app.cars.dao.json.CarDao
 import app.cars.CarsController
 import app.resources.CarsResource
 import app.util.Filters

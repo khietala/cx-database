@@ -1,5 +1,6 @@
 package app.resources
 import app.cars.*
+import app.cars.dao.json.CarDao
 import app.util.Path
 import spark.Spark.*
 
@@ -14,7 +15,6 @@ object CarsResource {
             post("") { req, _ -> create(CarParser.parseOne(req.body())) }
         }
 
-        path(Path.Web.INDEX) { get("") { _, _ ->  "Hello World" } }
         path(Path.Web.CARS) { get("") { req, _ -> carsController.getCars(req)} }
         path(Path.Web.CAR) { get("") { req, _ -> carsController.getCar(req)} }
     }
