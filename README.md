@@ -12,4 +12,4 @@ Uses Apache Velocity templating engine.
 
 ### Database
 
-In the first instance the vehicle data is stored in a json file but I will work on using a database, oribably nosql as there is no need for relational data here.
+In the first instance the vehicle data is stored in a json file but I will work on using a database, probably nosql as there is no need for relational data here.
