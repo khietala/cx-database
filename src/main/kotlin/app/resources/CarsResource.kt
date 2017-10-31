@@ -7,7 +7,7 @@ import spark.Spark.*
 
 object CarsResource {
     lateinit var carsDao: CarDao
-    fun init(carsController: CarsController, carsDao: CarDao): Unit {
+    fun init(carsController: CarsController, carsDao: CarDao) {
         CorsHelper.apply()
         this.carsDao = carsDao
         path(Path.Web.API_CARS) {
