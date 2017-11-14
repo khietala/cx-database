@@ -13,7 +13,7 @@ class CarsController {
 
     fun getCars(request: Request): String {
         try {
-            return ViewUtil.render(request, hashMapOf(Pair("cars", CarsResource.getAll().values)), CARS_ALL)
+            return ViewUtil.render(request, hashMapOf(Pair("cars", CarsResource.getAll(request).values)), CARS_ALL)
         } catch (e: Exception) {
             LOG.error(e.message)
             return ""

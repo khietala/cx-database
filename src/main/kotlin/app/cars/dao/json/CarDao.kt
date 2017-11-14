@@ -12,9 +12,12 @@ import kotlin.collections.HashMap
 class CarDao(val dbType: String = "json", val dbName: String = "cars.json") {
     private var carsCache: Cars = fromFile(dbName)
 
-    fun getAll(page: Int = 0, size: Int = 0): HashMap<String, Car> {
-        return carsCache.cars.filter { IntRange((page -1 * size), (page * size)).contains(it.key) }
+    fun getAll(page: Int = 0, size: Int = 0, filter: Filter = Filter()): HashMap<String, Car> {
+        /*return carsCache.cars.filter { IntRange((page -1 * size), (page * size)).contains(it.key) }
                 as HashMap<String, Car>
+    */
+    return carsCache.cars.toList().subList((page - 1) * size, page * size)
+            .map { it.first to it.second }.toMap() as HashMap<String, Car>
     }
 
     fun getById(id: String): Car {
@@ -57,6 +60,8 @@ class CarDao(val dbType: String = "json", val dbName: String = "cars.json") {
         File(dbName).delete()
     }
 }
+
+class Filter(field: String = "", asc: Boolean = true)
 
 data class Cars(val cars: HashMap<String, Car>)
 

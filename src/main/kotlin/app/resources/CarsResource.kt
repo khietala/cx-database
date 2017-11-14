@@ -23,8 +23,9 @@ object CarsResource {
     }
 
     fun getAll(request: Request):HashMap<String, Car>  {
-        val page = request.queryParams("page") as Int
-        val size = request.queryParams("size") as Int
+        val queryParams = request.queryParams()
+        val page = if (queryParams.contains("page")) request.queryParams("page").toInt() else 0
+        val size = if (queryParams.contains("size")) request.queryParams("size").toInt() else 0
         return carsDao.getAll(page = page, size = size)
     }
 
