@@ -54,6 +54,28 @@ class CarsResourceTest {
     }
 
     @Test
+    fun givenGetPageThenPageReturned() {
+        val testUrl = "${baseURI}api/cars"
+
+        var response = given()
+                .accept(ContentType.ANY)
+
+                .queryParam("page", 2)
+                .queryParam("size", 3)
+
+                .get(testUrl)
+
+                .then()
+                .statusCode(200)
+                .log().all()
+                .extract()
+                .response()
+
+        JSONAssert.assertEquals(response.asString(),
+                CarParser.marshall(records.cars.entries.filter { listOf<String>("4","5","6").contains(it.key) }.map { it.value }), false)
+    }
+
+    @Test
     fun givenGetByIdThenOneReturned() {
         val testUrl = "${baseURI}api/cars/2"
 

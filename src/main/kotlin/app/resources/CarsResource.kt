@@ -3,6 +3,7 @@ import app.cars.*
 import app.cars.dao.json.CarDao
 import app.util.CorsHelper
 import app.util.Path
+import spark.Request
 import spark.Spark.*
 
 object CarsResource {
@@ -11,7 +12,7 @@ object CarsResource {
         CorsHelper.apply()
         this.carsDao = carsDao
         path(Path.Web.API_CARS) {
-            get("") { _, _ -> CarParser.marshall(getAll().entries.map {  it.value }) }
+            get("") { request, _ -> CarParser.marshall(getAll(request).entries.map {  it.value }) }
             get("/:id") { request, _ -> CarParser.marshall(getById(request.params("id"))) }
             put("/:id", "application/json") { req, _ -> edit(req.params("id"), CarParser.parseOne(req.body())) }
             post("", "application/json") { req, _ -> create(CarParser.parseOne(req.body())) }
@@ -21,8 +22,10 @@ object CarsResource {
         path(Path.Web.CAR) { get("") { req, _ -> carsController.getCar(req)} }
     }
 
-    fun getAll():HashMap<String, Car>  {
-        return carsDao.getAll()
+    fun getAll(request: Request):HashMap<String, Car>  {
+        val page = request.queryParams("page") as Int
+        val size = request.queryParams("size") as Int
+        return carsDao.getAll(page = page, size = size)
     }
 
     fun getById(id: String): Car {

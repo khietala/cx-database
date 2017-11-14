@@ -4,6 +4,7 @@ import app.cars.Car
 import app.cars.CarParser
 import app.cars.defaultCar
 import java.io.File
+import java.math.BigInteger
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -11,8 +12,9 @@ import kotlin.collections.HashMap
 class CarDao(val dbType: String = "json", val dbName: String = "cars.json") {
     private var carsCache: Cars = fromFile(dbName)
 
-    fun getAll(): HashMap<String, Car> {
-        return carsCache.cars
+    fun getAll(page: Int = 0, size: Int = 0): HashMap<String, Car> {
+        return carsCache.cars.filter { IntRange((page -1 * size), (page * size)).contains(it.key) }
+                as HashMap<String, Car>
     }
 
     fun getById(id: String): Car {
