@@ -1,6 +1,7 @@
 package app.resources
 import app.cars.*
 import app.cars.dao.json.CarDao
+import app.cars.dao.json.Filter
 import app.util.CorsHelper
 import app.util.Path
 import spark.Request
@@ -26,7 +27,10 @@ object CarsResource {
         val queryParams = request.queryParams()
         val page = if (queryParams.contains("page")) request.queryParams("page").toInt() else 0
         val size = if (queryParams.contains("size")) request.queryParams("size").toInt() else 0
-        return carsDao.getAll(page = page, size = size)
+        val sort = if (queryParams.contains("sort")) request.queryParams("sort") else ""
+        val order = if (queryParams.contains("order")) request.queryParams("order") else "asc"
+
+        return carsDao.getAll(page = page, size = size, filter = Filter(field = sort, asc = order == "asc"))
     }
 
     fun getById(id: String): Car {

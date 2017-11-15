@@ -76,6 +76,60 @@ class CarsResourceTest {
     }
 
     @Test
+    fun givenSortByColourThenColourOrder() {
+        val testUrl = "${baseURI}api/cars"
+
+        var response = given()
+                .accept(ContentType.ANY)
+
+                .queryParam("page", 1)
+                .queryParam("size", 3)
+                .queryParam("sort", "colour")
+                .queryParam("order", "asc")
+
+                .get(testUrl)
+
+                .then()
+                .statusCode(200)
+                .log().all()
+                .extract()
+                .response()
+
+        JSONAssert.assertEquals(response.asString(),
+                CarParser.marshall(
+                        records.cars.entries
+                                .filter { listOf<String>("10","9","8").contains(it.key) }
+                                .map { it.value }), false)
+    }
+
+    @Test
+    fun givenSortByColourDescThenColourOrderDesc() {
+        val testUrl = "${baseURI}api/cars"
+
+        var response = given()
+                .accept(ContentType.ANY)
+
+                .queryParam("page", 1)
+                .queryParam("size", 3)
+                .queryParam("sort", "colour")
+                .queryParam("order", "desc")
+
+                .get(testUrl)
+
+                .then()
+                .statusCode(200)
+                .log().all()
+                .extract()
+                .response()
+
+        JSONAssert.assertEquals(response.asString(),
+                CarParser.marshall(
+                        records.cars.entries
+                                .filter { listOf<String>("1", "2","3").contains(it.key) }
+                                .map { it.value }), false)
+    }
+
+    @Test
     fun givenGetByIdThenOneReturned() {
         val testUrl = "${baseURI}api/cars/2"
 
@@ -148,7 +202,7 @@ class CarsResourceTest {
 
     fun createRecords(): HashMap<String, Car> {
         return IntRange(1, 10)
-                .map { Car(id = it.toString(), year = UUID.randomUUID().toString()) }
+                .map { Car(id = it.toString(), colour = (10 - it).toString(), year = UUID.randomUUID().toString()) }
                 .map { it.id to it }.toMap(HashMap<String, Car>())
     }
 }

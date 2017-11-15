@@ -7,17 +7,48 @@ import java.io.File
 import java.math.BigInteger
 import java.util.*
 import kotlin.collections.HashMap
+import kotlin.reflect.memberProperties
 
 
 class CarDao(val dbType: String = "json", val dbName: String = "cars.json") {
     private var carsCache: Cars = fromFile(dbName)
 
     fun getAll(page: Int = 0, size: Int = 0, filter: Filter = Filter()): HashMap<String, Car> {
-        /*return carsCache.cars.filter { IntRange((page -1 * size), (page * size)).contains(it.key) }
-                as HashMap<String, Car>
-    */
-    return carsCache.cars.toList().subList((page - 1) * size, page * size)
-            .map { it.first to it.second }.toMap() as HashMap<String, Car>
+        return carsCache.cars
+                .map { it.value }
+                //.toSortedMap( { comparator(it, filter) } )
+                .sortedWith(
+                        if (filter.asc) {
+                            compareBy<Car> {
+                                compareField(it, filter)
+                                }
+                        } else {
+                            compareByDescending<Car> {
+                                compareField(it, filter)
+                            }
+                        }
+                )
+                .toList().subList((page - 1) * size, page * size)
+                .map { it.id to it }.toMap() as HashMap<String, Car>
+    }
+
+    private fun compareField(it: Car, filter: Filter): String {
+        return when (filter.field) {
+            "colour" -> it.colour
+            "year" -> it.year
+            else -> it.id
+        }
+    }
+
+    private fun comparator(car: Car, filter: Filter): Comparator<String> {
+        return compareBy<String> {
+            /*car.javaClass.kotlin.memberProperties.first { it.name == filter.field }.get(car)*/
+            when (filter.field) {
+                "colour" -> car.colour
+                "year" -> car.year
+                else -> car.id
+            }
+        }
     }
 
     fun getById(id: String): Car {
@@ -61,7 +92,7 @@ class CarDao(val dbType: String = "json", val dbName: String = "cars.json") {
     }
 }
 
-class Filter(field: String = "", asc: Boolean = true)
+data class Filter(val field: String = "", val asc: Boolean = true)
 
 data class Cars(val cars: HashMap<String, Car>)
 
