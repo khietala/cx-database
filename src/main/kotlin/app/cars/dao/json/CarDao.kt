@@ -14,22 +14,26 @@ class CarDao(val dbType: String = "json", val dbName: String = "cars.json") {
     private var carsCache: Cars = fromFile(dbName)
 
     fun getAll(page: Int = 0, size: Int = 0, filter: Filter = Filter()): HashMap<String, Car> {
-        return carsCache.cars
-                .map { it.value }
-                //.toSortedMap( { comparator(it, filter) } )
-                .sortedWith(
-                        if (filter.asc) {
-                            compareBy<Car> {
-                                compareField(it, filter)
+        return if (carsCache.cars.size > 0) {
+            carsCache.cars
+                    .map { it.value }
+                    //.toSortedMap( { comparator(it, filter) } )
+                    .sortedWith(
+                            if (filter.asc) {
+                                compareBy<Car> {
+                                    compareField(it, filter)
                                 }
-                        } else {
-                            compareByDescending<Car> {
-                                compareField(it, filter)
+                            } else {
+                                compareByDescending<Car> {
+                                    compareField(it, filter)
+                                }
                             }
-                        }
-                )
-                .toList().subList((page - 1) * size, page * size)
-                .map { it.id to it }.toMap() as HashMap<String, Car>
+                    )
+                    .toList().subList((page - 1) * size, page * size)
+                    .map { it.id to it }.toMap() as HashMap<String, Car>
+        } else {
+            HashMap<String, Car>()
+        }
     }
 
     private fun compareField(it: Car, filter: Filter): String {
