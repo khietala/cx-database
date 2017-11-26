@@ -130,6 +130,29 @@ class CarsResourceTest {
     }
 
     @Test
+    fun givenSortingAndPagingEmptyThenReturnAll() {
+        val testUrl = "${baseURI}api/cars"
+
+        var response = given()
+                .accept(ContentType.ANY)
+
+                .queryParam("page", 0)
+                .queryParam("size", 0)
+                .queryParam("sort", "")
+                .queryParam("order", "desc")
+
+                .get(testUrl)
+
+                .then()
+                .statusCode(200)
+                .log().all()
+                .extract()
+                .response()
+
+        JSONAssert.assertEquals(response.asString(), CarParser.marshall(records.cars.entries.map { it.value }), false)
+    }
+
+    @Test
     fun givenGetByIdThenOneReturned() {
         val testUrl = "${baseURI}api/cars/2"
 
